@@ -1,14 +1,29 @@
-version: '2'
+version: "3"
+
 services:
+  jenkins:
+    image: jenkinsci/blueocean:latest
+    ports:
+     - '8080:8080'
+    volumes:
+     - jenkins-data:/var/jenkins_home
+     - /var/run/docker.sock:/var/run/docker.sock
+     - $HOME:/home
+
   myerp.db:
     image: postgres:9.4
     ports:
-      - "127.0.0.1:9032:5432"
+     - '127.0.0.1:9032:5432'
     volumes:
-#      - "./data/db:/var/lib/postgresql/data"
-       - "./init/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d"
+     #- './data/db:/var/lib/postgresql/data'
+     #- './init/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d'
+     - './init/db/docker-entrypoint-initdb.d/01_create_schema.sql:/docker-entrypoint-initdb.d/01_create_schema.sql.sql'
+     - './init/db/docker-entrypoint-initdb.d/02_create_tables.sql:/docker-entrypoint-initdb.d/02_create_tables.sql.sql'
+     - './init/db/docker-entrypoint-initdb.d/21_insert_data_demo.sql:/docker-entrypoint-initdb.d/21_insert_data_demo.sql.sql'
     environment:
-      - POSTGRES_DB=db_myerp
-      - POSTGRES_USER=usr_myerp
-      - POSTGRES_PASSWORD=myerp
-      
+     - POSTGRES_DB=db_myerp
+     - POSTGRES_USER=usr_myerp
+     - POSTGRES_PASSWORD=myerp
+     
+volumes:
+  jenkins-data:
