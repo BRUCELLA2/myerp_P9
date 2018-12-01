@@ -41,4 +41,43 @@ public class EcritureComptableTest {
         Assert.assertFalse(vEcriture.toString(), vEcriture.isEquilibree());
     }
 
+    @Test
+    public void getTotalDebit() {
+        EcritureComptable vEcriture;
+        vEcriture = new EcritureComptable();
+
+        vEcriture.setLibelle("Débit 10.55");
+        vEcriture.getListLigneEcriture().add(this.createLigne(1, "6.50", null));
+        vEcriture.getListLigneEcriture().add(this.createLigne(1, "4.05", null));
+        Assert.assertTrue(vEcriture.toString(), vEcriture.getTotalDebit().equals(BigDecimal.valueOf(10.55)));
+        Assert.assertFalse(vEcriture.toString(), vEcriture.getTotalDebit().equals(BigDecimal.valueOf(11)));
+
+        vEcriture.getListLigneEcriture().clear();
+        vEcriture.setLibelle("Ecriture avec debit null - Débit 12.65");
+        vEcriture.getListLigneEcriture().add(this.createLigne(1, null, null));
+        vEcriture.getListLigneEcriture().add(this.createLigne(1, "10", null));
+        vEcriture.getListLigneEcriture().add(this.createLigne(1, "2.65", null));
+        Assert.assertTrue(vEcriture.toString(), vEcriture.getTotalDebit().equals(BigDecimal.valueOf(12.65)));
+        Assert.assertFalse(vEcriture.toString(), vEcriture.getTotalDebit().equals(BigDecimal.valueOf(13)));
+    }
+
+    @Test
+    public void getTotalCredit() {
+        EcritureComptable vEcriture;
+        vEcriture = new EcritureComptable();
+
+        vEcriture.setLibelle("Crédit 20.75");
+        vEcriture.getListLigneEcriture().add(this.createLigne(1, null, "10"));
+        vEcriture.getListLigneEcriture().add(this.createLigne(1, null, "10.75"));
+        Assert.assertTrue(vEcriture.toString(), vEcriture.getTotalCredit().equals(BigDecimal.valueOf(20.75)));
+        Assert.assertFalse(vEcriture.toString(), vEcriture.getTotalCredit().equals(BigDecimal.valueOf(20)));
+
+        vEcriture.getListLigneEcriture().clear();
+        vEcriture.setLibelle("Ecriture avec credit null - Crébit 32.65");
+        vEcriture.getListLigneEcriture().add(this.createLigne(1, null, "11.65"));
+        vEcriture.getListLigneEcriture().add(this.createLigne(1, null, null));
+        vEcriture.getListLigneEcriture().add(this.createLigne(1, null, "21"));
+        Assert.assertTrue(vEcriture.toString(), vEcriture.getTotalCredit().equals(BigDecimal.valueOf(32.65)));
+        Assert.assertFalse(vEcriture.toString(), vEcriture.getTotalCredit().equals(BigDecimal.valueOf(21)));
+    }
 }
