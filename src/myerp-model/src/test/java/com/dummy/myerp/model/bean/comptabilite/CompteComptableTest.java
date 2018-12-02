@@ -18,8 +18,8 @@ public class CompteComptableTest {
         listCompte.add(compteComptable2);
 
         Assert.assertTrue(compteComptable.toString(), CompteComptable.getByNumero(listCompte, 3).getLibelle().equals("compte test"));
-        Assert.assertFalse(compteComptable.toString(), CompteComptable.getByNumero(listCompte, 2).getLibelle().equals("compte test"));
-        Assert.assertTrue(compteComptable.toString(), CompteComptable.getByNumero(listCompte, 4) == null);
+        Assert.assertFalse(compteComptable2.toString(), CompteComptable.getByNumero(listCompte, 2).getLibelle().equals("compte test"));
+        Assert.assertTrue("compte inexistant", CompteComptable.getByNumero(listCompte, 4) == null);
     }
 
 }
