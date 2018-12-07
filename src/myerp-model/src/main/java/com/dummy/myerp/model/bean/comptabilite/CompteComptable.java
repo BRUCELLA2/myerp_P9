@@ -64,7 +64,6 @@ public class CompteComptable {
         libelle = pLibelle;
     }
 
-
     // ==================== Méthodes ====================
     @Override
     public String toString() {

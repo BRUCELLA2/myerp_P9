@@ -1,6 +1,8 @@
 package com.dummy.myerp.business.impl.manager;
 
 import java.math.BigDecimal;
+import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -94,7 +96,6 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
      * @param pEcritureComptable -
      * @throws FunctionalException Si l'Ecriture comptable ne respecte pas les règles de gestion
      */
-    // TODO tests à compléter
     protected void checkEcritureComptableUnit(EcritureComptable pEcritureComptable) throws FunctionalException {
         // ===== Vérification des contraintes unitaires sur les attributs de l'écriture
         Set<ConstraintViolation<EcritureComptable>> vViolations = getConstraintValidator().validate(pEcritureComptable);
@@ -133,7 +134,26 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         }
 
         // TODO ===== RG_Compta_5 : Format et contenu de la référence
+        // TODO A TESTER - Manque cas ref null
         // vérifier que l'année dans la référence correspond bien à la date de l'écriture, idem pour le code journal...
+        String vReference = pEcritureComptable.getReference();
+        String vCodeJournal = StringUtils.substringBefore(vReference, "-");
+        int vAnnee = Integer.parseInt(StringUtils.substringBetween(vReference, "-", "/"));
+        String vNumero = StringUtils.substringAfter(vReference, "/");
+
+        if (!StringUtils.equals(vCodeJournal, pEcritureComptable.getJournal().getCode())) {
+            throw  new FunctionalException(vCodeJournal + " Le code journal de la référence de l'écriture ne correspond pas au code journal" );
+        }
+        int vAnneeEcriture = pEcritureComptable.getDate().toInstant().atZone(ZoneId.systemDefault()).getYear();
+        if (vAnnee != vAnneeEcriture){
+            throw  new FunctionalException(vAnnee + " L'année de la référence de l'écriture ne correspond pas à l'année de l'écriture" );
+        }
+        if (vNumero.length() > 5 || vNumero.length() == 0 ){
+            throw new FunctionalException("Le numéro de la référence n'est pas correct (plus de 5 caractères ou égal à 0");
+        }
+
+
+
     }
 
 
@@ -151,7 +171,6 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                 // Recherche d'une écriture ayant la même référence
                 EcritureComptable vECRef = getDaoProxy().getComptabiliteDao().getEcritureComptableByRef(
                     pEcritureComptable.getReference());
-
                 // Si l'écriture à vérifier est une nouvelle écriture (id == null),
                 // ou si elle ne correspond pas à l'écriture trouvée (id != idECRef),
                 // c'est qu'il y a déjà une autre écriture avec la même référence

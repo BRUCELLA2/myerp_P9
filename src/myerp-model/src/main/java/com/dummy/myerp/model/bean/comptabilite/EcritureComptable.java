@@ -24,7 +24,10 @@ public class EcritureComptable {
     /** Journal comptable */
     @NotNull private JournalComptable journal;
     /** The Reference. */
-    @Pattern(regexp = "\\d{1,5}-\\d{4}/\\d{5}")
+    /** @ANO #0002
+    Le pattern doit prendre en compte les caractères autres que des chiffres pour le code journal.
+     */
+    @Pattern(regexp = "\\w{1,5}-\\d{4}/\\d{5}")
     private String reference;
     /** The Date. */
     @NotNull private Date date;
@@ -74,6 +77,7 @@ public class EcritureComptable {
     public List<LigneEcritureComptable> getListLigneEcriture() {
         return listLigneEcriture;
     }
+
 
     /**
      * Calcul et renvoie le total des montants au débit des lignes d'écriture
@@ -128,8 +132,8 @@ public class EcritureComptable {
             .append(vSEP).append("libelle='").append(libelle).append('\'')
             .append(vSEP).append("totalDebit=").append(this.getTotalDebit().toPlainString())
             .append(vSEP).append("totalCredit=").append(this.getTotalCredit().toPlainString())
-            .append(vSEP).append("listLigneEcriture=[\n")
-            .append(StringUtils.join(listLigneEcriture, "\n")).append("\n]")
+            .append(vSEP).append("listLigneEcriture=[")
+            .append(StringUtils.join(listLigneEcriture, "\n")).append("]")
             .append("}");
         return vStB.toString();
     }
