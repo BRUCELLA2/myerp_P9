@@ -2,7 +2,6 @@ package com.dummy.myerp.business.impl.manager;
 
 import java.math.BigDecimal;
 import java.time.ZoneId;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -10,6 +9,8 @@ import javax.validation.ConstraintViolationException;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.TransactionStatus;
 import com.dummy.myerp.business.contrat.manager.ComptabiliteManager;
 import com.dummy.myerp.business.impl.AbstractBusinessManager;
@@ -28,6 +29,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 
     // ==================== Attributs ====================
 
+    private static final Logger LOG = LoggerFactory.getLogger(ComptabiliteManagerImpl.class);
 
     // ==================== Constructeurs ====================
     /**
@@ -81,7 +83,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
     /**
      * {@inheritDoc}
      */
-    // TODO à tester
+
     @Override
     public void checkEcritureComptable(EcritureComptable pEcritureComptable) throws FunctionalException {
         this.checkEcritureComptableUnit(pEcritureComptable);
@@ -100,9 +102,14 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         // ===== Vérification des contraintes unitaires sur les attributs de l'écriture
         Set<ConstraintViolation<EcritureComptable>> vViolations = getConstraintValidator().validate(pEcritureComptable);
         if (!vViolations.isEmpty()) {
+            if(LOG.isDebugEnabled()) {
+                for (final ConstraintViolation<EcritureComptable> violation : vViolations) {
+                    LOG.debug(violation.getMessage());
+                }
+            }
             throw new FunctionalException("L'écriture comptable ne respecte pas les règles de gestion.",
                                           new ConstraintViolationException(
-                                              "L'écriture comptable ne respecte pas les contraintes de validation",
+                                              "L'écriture comptable ne respecte pas les contraintes de validation : ",
                                               vViolations));
         }
 
@@ -124,6 +131,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                 vNbrDebit++;
             }
         }
+        // TODO le if est toujours false suite au test de contrainte au début de la méthode. A supprimer ?
         // On test le nombre de lignes car si l'écriture à une seule ligne
         //      avec un montant au débit et un montant au crédit ce n'est pas valable
         if (pEcritureComptable.getListLigneEcriture().size() < 2
@@ -148,6 +156,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         if (vAnnee != vAnneeEcriture){
             throw  new FunctionalException(vAnnee + " L'année de la référence de l'écriture ne correspond pas à l'année de l'écriture" );
         }
+        // TODO if toujours false suite au controle de contraite du début de la méthode. A supprimer ?
         if (vNumero.length() > 5 || vNumero.length() == 0 ){
             throw new FunctionalException("Le numéro de la référence n'est pas correct (plus de 5 caractères ou égal à 0");
         }

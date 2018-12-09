@@ -31,6 +31,32 @@ public class ComptabiliteManagerImplTest {
 
 
     /**
+     * TODO à vérifier si c'est ce qui est attendu.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void checkEcritureComptable() throws Exception {
+
+        EcritureComptable vEcritureComptable;
+        vEcritureComptable = new EcritureComptable();
+        vEcritureComptable.setId(1);
+        vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
+        vEcritureComptable.setDate(new Date());
+        vEcritureComptable.setReference("AC-2018/00001");
+        vEcritureComptable.setLibelle("Libelle");
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1),
+        null, new BigDecimal(123),
+        null));
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(2),
+        null, null,
+        new BigDecimal(123)));
+
+        manager.checkEcritureComptable(vEcritureComptable);
+
+    }
+
+    /**
      * TODO compléter le test et les RG vérifiées
      * Vérification RG2,RG3, RG6
      * Test passant.
@@ -171,12 +197,13 @@ public class ComptabiliteManagerImplTest {
     public void checkEcritureComptableUnitOneLineDebit() throws Exception {
         EcritureComptable vEcritureComptable;
         vEcritureComptable = new EcritureComptable();
+        vEcritureComptable.setId(1);
         vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
         vEcritureComptable.setDate(new Date());
         vEcritureComptable.setReference("AC-2018/00001");
         vEcritureComptable.setLibelle("Libelle");
         vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1),
-        null, new BigDecimal(123), null));
+        null, new BigDecimal(123),null));
 
         manager.checkEcritureComptableUnit(vEcritureComptable);
     }
