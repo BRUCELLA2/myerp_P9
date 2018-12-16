@@ -24,11 +24,13 @@ public class SequenceEcritureComptableTest {
 
     @Test
     public void sequenceEcritureComptable() {
-        SequenceEcritureComptable sequenceEcritureComptable = new SequenceEcritureComptable(2018, 50);
+        SequenceEcritureComptable sequenceEcritureComptable = new SequenceEcritureComptable("AC", 2018, 50);
 
         Assert.assertEquals(sequenceEcritureComptable.toString(), sequenceEcritureComptable.getAnnee(), Integer.valueOf(2018));
         Assert.assertEquals(sequenceEcritureComptable.toString(), sequenceEcritureComptable.getDerniereValeur(), Integer.valueOf(50));
+        Assert.assertEquals(sequenceEcritureComptable.toString(), sequenceEcritureComptable.getJournalCode(), "AC");
         Assert.assertNotEquals(sequenceEcritureComptable.toString(), sequenceEcritureComptable.getAnnee(), Integer.valueOf(1918));
         Assert.assertNotEquals(sequenceEcritureComptable.toString(), sequenceEcritureComptable.getDerniereValeur(), Integer.valueOf(10));
+        Assert.assertNotEquals(sequenceEcritureComptable.toString(), sequenceEcritureComptable.getJournalCode(), "ZZ");
     }
 }

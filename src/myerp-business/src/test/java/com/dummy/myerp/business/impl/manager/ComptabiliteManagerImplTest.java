@@ -4,20 +4,27 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.dummy.myerp.business.contrat.manager.ComptabiliteManager;
+import com.dummy.myerp.business.impl.TransactionManager;
 import com.dummy.myerp.consumer.dao.contrat.ComptabiliteDao;
 import com.dummy.myerp.consumer.dao.contrat.DaoProxy;
+import com.dummy.myerp.model.bean.comptabilite.*;
 import com.dummy.myerp.technical.exception.NotFoundException;
+import com.openpojo.reflection.PojoClass;
+import com.openpojo.reflection.impl.PojoClassFactory;
+import com.openpojo.validation.Validator;
+import com.openpojo.validation.ValidatorBuilder;
+import com.openpojo.validation.test.impl.GetterTester;
+import com.openpojo.validation.test.impl.SetterTester;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import com.dummy.myerp.model.bean.comptabilite.CompteComptable;
-import com.dummy.myerp.model.bean.comptabilite.EcritureComptable;
-import com.dummy.myerp.model.bean.comptabilite.JournalComptable;
-import com.dummy.myerp.model.bean.comptabilite.LigneEcritureComptable;
 import com.dummy.myerp.technical.exception.FunctionalException;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComptabiliteManagerImplTest {
@@ -29,6 +36,84 @@ public class ComptabiliteManagerImplTest {
         MockitoAnnotations.initMocks(this);
     }
 
+
+    @Test
+    public void validateSettersAndGetters() {
+        PojoClass comptabiliteManagerImpl = PojoClassFactory.getPojoClass(ComptabiliteManagerImpl.class);
+
+        Validator validator = ValidatorBuilder.create()
+        .with(new SetterTester(), new GetterTester())
+        .build();
+        validator.validate(comptabiliteManagerImpl);
+    }
+
+    /**
+     * Vérification RG5.
+     * Test passant.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void addReferenceTest() throws Exception {
+        EcritureComptable vEcritureComptable;
+        vEcritureComptable = new EcritureComptable();
+        vEcritureComptable.setId(1);
+        vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
+        vEcritureComptable.setDate(new Date());
+        vEcritureComptable.setLibelle("Libelle");
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1),
+        null, new BigDecimal(123),
+        null));
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(2),
+        null, null,
+        new BigDecimal(123)));
+
+        SequenceEcritureComptable vSequence = new SequenceEcritureComptable("AC", 2018, 5);
+
+        DaoProxy daoProxy = Mockito.mock(DaoProxy.class);
+        ComptabiliteDao comptabiliteDao = Mockito.mock(ComptabiliteDao.class);
+        TransactionManager transactionManager = Mockito.mock(TransactionManager.class);
+
+        Mockito.when(daoProxy.getComptabiliteDao()).thenReturn(comptabiliteDao);
+        Mockito.when(comptabiliteDao.getSequenceEcritureComptable("AC", 2018)).thenReturn(vSequence);
+
+        manager.configure(null, daoProxy, transactionManager);
+        manager.addReference(vEcritureComptable);
+        Assert.assertEquals(vEcritureComptable.toString(), "AC-2018/00006", vEcritureComptable.getReference());
+    }
+
+    /**
+     * Vérification RG5.
+     * Sequence non trouvée, initialisation de la séquence
+     *
+     * @throws Exception
+     */
+    @Test
+    public void addReferenceWithoutSequenceTest() throws Exception {
+        EcritureComptable vEcritureComptable;
+        vEcritureComptable = new EcritureComptable();
+        vEcritureComptable.setId(1);
+        vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
+        vEcritureComptable.setDate(new Date());
+        vEcritureComptable.setLibelle("Libelle");
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1),
+        null, new BigDecimal(123),
+        null));
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(2),
+        null, null,
+        new BigDecimal(123)));
+
+        DaoProxy daoProxy = Mockito.mock(DaoProxy.class);
+        ComptabiliteDao comptabiliteDao = Mockito.mock(ComptabiliteDao.class);
+        TransactionManager transactionManager = Mockito.mock(TransactionManager.class);
+
+        Mockito.when(daoProxy.getComptabiliteDao()).thenReturn(comptabiliteDao);
+        Mockito.doThrow(NotFoundException.class).when(comptabiliteDao).getSequenceEcritureComptable("AC", 2018);
+
+        manager.configure(null, daoProxy, transactionManager);
+        manager.addReference(vEcritureComptable);
+        Assert.assertEquals(vEcritureComptable.toString(), "AC-2018/00001", vEcritureComptable.getReference());
+    }
 
     /**
      * TODO à vérifier si c'est ce qui est attendu.

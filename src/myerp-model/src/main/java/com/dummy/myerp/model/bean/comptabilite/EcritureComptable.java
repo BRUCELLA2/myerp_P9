@@ -24,7 +24,7 @@ public class EcritureComptable {
     /** Journal comptable */
     @NotNull private JournalComptable journal;
     /** The Reference. */
-    /** @ANO #0002
+    /* @ANO #0002
     Le pattern doit prendre en compte les caractères autres que des chiffres pour le code journal.
      */
     @Pattern(regexp = "\\w{1,5}-\\d{4}/\\d{5}")
