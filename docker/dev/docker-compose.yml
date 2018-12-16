@@ -1,14 +1,6 @@
 version: "3"
 
 services:
-  jenkins:
-    image: jenkinsci/blueocean:latest
-    ports:
-     - '8080:8080'
-    volumes:
-     - jenkins-data:/var/jenkins_home
-     - /var/run/docker.sock:/var/run/docker.sock
-     - $HOME:/home
 
   myerp.db:
     image: postgres:9.4
@@ -24,6 +16,4 @@ services:
      - POSTGRES_DB=db_myerp
      - POSTGRES_USER=usr_myerp
      - POSTGRES_PASSWORD=myerp
-     
-volumes:
-  jenkins-data:
+
