@@ -295,7 +295,7 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
         NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource(DataSourcesEnum.MYERP));
         MapSqlParameterSource vSqlParams = new MapSqlParameterSource();
         vSqlParams.addValue("journal_code", pSequenceEcritureComptable.getJournalCode());
-        vSqlParams.addValue("annnee", pSequenceEcritureComptable.getAnnee());
+        vSqlParams.addValue("annee", pSequenceEcritureComptable.getAnnee());
         vSqlParams.addValue("derniere_valeur", pSequenceEcritureComptable.getDerniereValeur());
 
         vJdbcTemplate.update(SQLinsertSequenceEcritureComptable, vSqlParams);
@@ -312,7 +312,7 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
         NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource(DataSourcesEnum.MYERP));
         MapSqlParameterSource vSqlParams = new MapSqlParameterSource();
         vSqlParams.addValue("journal_code", pSequenceEcritureComptable.getJournalCode());
-        vSqlParams.addValue("annnee", pSequenceEcritureComptable.getAnnee());
+        vSqlParams.addValue("annee", pSequenceEcritureComptable.getAnnee());
         vSqlParams.addValue("derniere_valeur", pSequenceEcritureComptable.getDerniereValeur());
 
         vJdbcTemplate.update(SQLupdateSequenceEcritureComptable, vSqlParams);
@@ -325,11 +325,11 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
         SQLdeleteSequenceEcritureComptable = pSQLdeleteSequenceEcritureComptable;
     }
     @Override
-    public void deleteSequenceEcritureComptable(String pJournalCode, Integer pAnnnee) {
+    public void deleteSequenceEcritureComptable(String pJournalCode, Integer pAnnee) {
         NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource(DataSourcesEnum.MYERP));
         MapSqlParameterSource vSqlParams = new MapSqlParameterSource();
         vSqlParams.addValue("journal_code", pJournalCode);
-        vSqlParams.addValue("annnee", pAnnnee);
+        vSqlParams.addValue("annee", pAnnee);
 
         vJdbcTemplate.update(SQLdeleteSequenceEcritureComptable, vSqlParams);
     }
