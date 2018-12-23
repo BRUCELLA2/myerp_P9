@@ -61,10 +61,8 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
     /**
      * {@inheritDoc}
      */
-    // TODO à tester
     @Override
     public synchronized void addReference(EcritureComptable pEcritureComptable) {
-        // TODO à tester
         /* Le principe :
                 1.  Remonter depuis la persitance la dernière valeur de la séquence du journal pour l'année de l'écriture
                     (table sequence_ecriture_comptable)
@@ -93,7 +91,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 
             updateSequenceEcritureComptable(sequence);
         } catch (NotFoundException e) {
-            Integer vDerniereValeur = 0;
+            int vDerniereValeur = 0;
             SequenceEcritureComptable sequence = new SequenceEcritureComptable(vJournalCode, vAnnnee, vDerniereValeur + 1);
 
             vReference.append(vJournalCode).append("-")
@@ -288,6 +286,21 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
         try {
             getDaoProxy().getComptabiliteDao().updateSequenceEcritureComptable(pSequenceEcritureComptable);
+            getTransactionManager().commitMyERP(vTS);
+            vTS = null;
+        } finally {
+            getTransactionManager().rollbackMyERP(vTS);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable) {
+        TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
+        try {
+            getDaoProxy().getComptabiliteDao().deleteSequenceEcritureComptable(pSequenceEcritureComptable.getJournalCode(), pSequenceEcritureComptable.getAnnee());
             getTransactionManager().commitMyERP(vTS);
             vTS = null;
         } finally {

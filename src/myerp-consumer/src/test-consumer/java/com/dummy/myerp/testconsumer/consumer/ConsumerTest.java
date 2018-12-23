@@ -326,6 +326,7 @@ public class ConsumerTest extends ConsumerTestCase {
             fail();
         }
         assertTrue("L'insertion de l'écriture comptable ne s'est pas faite correctement", testOk);
+        vDao.deleteEcritureComptable(ecritureComptable.getId());
     }
 
     /**
@@ -384,6 +385,7 @@ public class ConsumerTest extends ConsumerTestCase {
             fail();
         }
         assertTrue("La mise à jour de l'écriture comptable ne s'est pas faite correctement", testOk);
+        vDao.deleteEcritureComptable(ecritureComptableModifiee.getId());
     }
 
     /**
