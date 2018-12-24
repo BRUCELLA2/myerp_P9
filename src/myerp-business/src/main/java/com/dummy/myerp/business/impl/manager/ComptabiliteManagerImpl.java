@@ -109,7 +109,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
      */
 
     @Override
-    public void checkEcritureComptable(EcritureComptable pEcritureComptable) throws FunctionalException {
+    public void    checkEcritureComptable(EcritureComptable pEcritureComptable) throws FunctionalException {
         this.checkEcritureComptableUnit(pEcritureComptable);
         this.checkEcritureComptableContext(pEcritureComptable);
     }
@@ -155,19 +155,8 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                 vNbrDebit++;
             }
         }
-        // TODO le if est toujours false suite au test de contrainte au début de la méthode. A supprimer ?
-        // On test le nombre de lignes car si l'écriture à une seule ligne
-        //      avec un montant au débit et un montant au crédit ce n'est pas valable
-        if (pEcritureComptable.getListLigneEcriture().size() < 2
-            || vNbrCredit < 1
-            || vNbrDebit < 1) {
-            throw new FunctionalException(
-                "L'écriture comptable doit avoir au moins deux lignes : une ligne au débit et une ligne au crédit.");
-        }
 
-        // TODO ===== RG_Compta_5 : Format et contenu de la référence
-        // TODO A TESTER - Manque cas ref null
-        // vérifier que l'année dans la référence correspond bien à la date de l'écriture, idem pour le code journal...
+        // ===== RG_Compta_5 : Format et contenu de la référence
         String vReference = pEcritureComptable.getReference();
         String vCodeJournal = StringUtils.substringBefore(vReference, "-");
         int vAnnee = Integer.parseInt(StringUtils.substringBetween(vReference, "-", "/"));
@@ -180,13 +169,6 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         if (vAnnee != vAnneeEcriture){
             throw  new FunctionalException(vAnnee + " L'année de la référence de l'écriture ne correspond pas à l'année de l'écriture" );
         }
-        // TODO if toujours false suite au controle de contraite du début de la méthode. A supprimer ?
-        if (vNumero.length() > 5 || vNumero.length() == 0 ){
-            throw new FunctionalException("Le numéro de la référence n'est pas correct (plus de 5 caractères ou égal à 0");
-        }
-
-
-
     }
 
 
@@ -236,8 +218,13 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
     /**
      * {@inheritDoc}
      */
+    /*
+        @ANO #0006
+        La vérification de l'écriture comptable n'était pas faite avant l'update
+     */
     @Override
     public void updateEcritureComptable(EcritureComptable pEcritureComptable) throws FunctionalException {
+        this.checkEcritureComptable(pEcritureComptable);
         TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
         try {
             getDaoProxy().getComptabiliteDao().updateEcritureComptable(pEcritureComptable);

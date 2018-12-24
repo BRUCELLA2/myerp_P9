@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import com.dummy.myerp.business.contrat.manager.ComptabiliteManager;
+import com.dummy.myerp.business.impl.AbstractBusinessManager;
 import com.dummy.myerp.business.impl.TransactionManager;
 import com.dummy.myerp.consumer.dao.contrat.ComptabiliteDao;
 import com.dummy.myerp.consumer.dao.contrat.DaoProxy;
@@ -110,18 +111,18 @@ public class ComptabiliteManagerImplTest {
         Mockito.when(daoProxy.getComptabiliteDao()).thenReturn(comptabiliteDao);
         Mockito.doThrow(NotFoundException.class).when(comptabiliteDao).getSequenceEcritureComptable("AC", 2018);
 
-        manager.configure(null, daoProxy, transactionManager);
+        AbstractBusinessManager.configure(null, daoProxy, transactionManager);
         manager.addReference(vEcritureComptable);
         Assert.assertEquals(vEcritureComptable.toString(), "AC-2018/00001", vEcritureComptable.getReference());
     }
 
     /**
-     * TODO à vérifier si c'est ce qui est attendu.
+     * Test passant.
      *
      * @throws Exception
      */
     @Test
-    public void checkEcritureComptable() throws Exception {
+    public void checkEcritureComptableTest() throws Exception {
 
         EcritureComptable vEcritureComptable;
         vEcritureComptable = new EcritureComptable();
@@ -142,8 +143,7 @@ public class ComptabiliteManagerImplTest {
     }
 
     /**
-     * TODO compléter le test et les RG vérifiées
-     * Vérification RG2,RG3, RG6
+     * Vérification RG2,RG3, RG6.
      * Test passant.
      *
      * @throws Exception
@@ -395,7 +395,7 @@ public class ComptabiliteManagerImplTest {
         Mockito.when(daoProxy.getComptabiliteDao()).thenReturn(comptabiliteDao);
         Mockito.when(comptabiliteDao.getEcritureComptableByRef("AC-2018/00001")).thenReturn(ecritureComptable);
 
-        manager.configure(null, daoProxy, null);
+        AbstractBusinessManager.configure(null, daoProxy, null);
         manager.checkEcritureComptableContext(ecritureComptable);
     }
 
@@ -443,7 +443,7 @@ public class ComptabiliteManagerImplTest {
         Mockito.when(daoProxy.getComptabiliteDao()).thenReturn(comptabiliteDao);
         Mockito.when(comptabiliteDao.getEcritureComptableByRef("AC-2018/00001")).thenReturn(ecritureComptable);
 
-        manager.configure(null, daoProxy, null);
+        AbstractBusinessManager.configure(null, daoProxy, null);
         manager.checkEcritureComptableContext(ecritureComptable2);
     }
 
@@ -476,7 +476,7 @@ public class ComptabiliteManagerImplTest {
         Mockito.when(daoProxy.getComptabiliteDao()).thenReturn(comptabiliteDao);
         Mockito.doThrow(NotFoundException.class).when(comptabiliteDao).getEcritureComptableByRef("AC-2018/00001");
 
-        manager.configure(null, daoProxy, null);
+        AbstractBusinessManager.configure(null, daoProxy, null);
         manager.checkEcritureComptableContext(ecritureComptable);
 
     }
@@ -524,7 +524,7 @@ public class ComptabiliteManagerImplTest {
         Mockito.when(daoProxy.getComptabiliteDao()).thenReturn(comptabiliteDao);
         Mockito.when(comptabiliteDao.getEcritureComptableByRef("AC-2018/00001")).thenReturn(ecritureComptable2);
 
-        manager.configure(null, daoProxy, null);
+        AbstractBusinessManager.configure(null, daoProxy, null);
         manager.checkEcritureComptableContext(ecritureComptable);
     }
 }

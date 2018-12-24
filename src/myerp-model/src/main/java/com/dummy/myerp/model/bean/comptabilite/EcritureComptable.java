@@ -24,8 +24,9 @@ public class EcritureComptable {
     /** Journal comptable */
     @NotNull private JournalComptable journal;
     /** The Reference. */
-    /* @ANO #0002
-    Le pattern doit prendre en compte les caractères autres que des chiffres pour le code journal.
+    /*
+        @ANO #0003
+        Le pattern doit prendre en compte les caractères autre que des chiffres pour le code journal.
      */
     @Pattern(regexp = "\\w{1,5}-\\d{4}/\\d{5}")
     private String reference;
@@ -100,6 +101,10 @@ public class EcritureComptable {
      * @return {@link BigDecimal}, {@link BigDecimal#ZERO} si aucun montant au crédit
      *
      */
+    /*
+        @ANO #0001
+        La méthode récupérait le débit de l'écriture comptable et non le crédit.
+     */
     public BigDecimal getTotalCredit() {
         BigDecimal vRetour = BigDecimal.ZERO;
         for (LigneEcritureComptable vLigneEcritureComptable : listLigneEcriture) {
@@ -112,7 +117,12 @@ public class EcritureComptable {
 
     /**
      * Renvoie si l'écriture est équilibrée (TotalDebit = TotalCrédit)
+     *
      * @return boolean
+     */
+    /*
+        @ANO #0002
+        La comparaison n'était pas faite correctement (equals() au lieu de compareTo())
      */
     public boolean isEquilibree() {
         boolean vRetour = this.getTotalDebit().compareTo(getTotalCredit()) == 0;

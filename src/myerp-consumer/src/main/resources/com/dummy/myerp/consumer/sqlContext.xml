@@ -55,7 +55,10 @@
                 )
             </value>
         </property>
-        <!-- @ANO #0005 -->
+        <!--
+            @ANO #0005
+            Une virgule était manquante dans la requête
+        -->
         <property name="SQLinsertListLigneEcritureComptable">
             <value>
                 INSERT INTO myerp.ligne_ecriture_comptable (

@@ -8,8 +8,9 @@ public class SequenceEcritureComptable {
 
     // ==================== Attributs ====================
 
-    /* @ANO #0003
-    L'attribut code journal était manquant (avec le getter et setter associé)
+    /*
+        @ANO #0004
+        L'attribut code journal était manquant (avec le getter et setter associé)
      */
     /** Le code du journal */
     private String journalCode;
